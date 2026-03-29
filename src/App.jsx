@@ -1,9 +1,17 @@
-import { BrowserRouter, Routes, Route, NavLink } from 'react-router-dom'
+import { useState } from 'react'
+import { BrowserRouter, Routes, Route, NavLink, Navigate } from 'react-router-dom'
 import Members from './pages/Members'
 import Trainers from './pages/Trainers'
 import Attendance from './pages/Attendance'
+import Login from './pages/Login'
 
 function App() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
+
+  if (!isLoggedIn) {
+    return <Login onLogin={() => setIsLoggedIn(true)} />
+  }
+
   return (
     <BrowserRouter>
       <nav className="gym-navbar">
@@ -15,11 +23,19 @@ function App() {
           <NavLink to="/members">Members</NavLink>
           <NavLink to="/trainers">Trainers</NavLink>
           <NavLink to="/attendance">Attendance</NavLink>
+          <button
+            className="gym-btn gym-btn-secondary"
+            style={{ padding: '6px 14px', fontSize: '0.8rem' }}
+            onClick={() => setIsLoggedIn(false)}
+          >
+            Logout
+          </button>
         </div>
       </nav>
 
       <div className="gym-page">
         <Routes>
+          <Route path="/" element={<Navigate to="/members" />} />
           <Route path="/members" element={<Members />} />
           <Route path="/trainers" element={<Trainers />} />
           <Route path="/attendance" element={<Attendance />} />
