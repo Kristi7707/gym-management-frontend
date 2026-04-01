@@ -23,10 +23,7 @@ function Login({ onLogin }) {
     }}>
       <div className="gym-card" style={{ width: '100%', maxWidth: '400px' }}>
         <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
-          <div style={{
-            fontSize: '3rem',
-            marginBottom: '0.5rem'
-          }}>🏋️</div>
+          <img src="/logogymgit .jpeg" alt="E28 Logo" style={{ width: '80px', height: '80px', borderRadius: '50%', objectFit: 'cover', marginBottom: '0.5rem' }} />
           <div style={{
   fontFamily: 'Bebas Neue, sans-serif',
   fontSize: '2rem',

@@ -16,7 +16,7 @@ function App() {
     <BrowserRouter>
       <nav className="gym-navbar">
         <div className="gym-logo">
-          <div className="gym-logo-icon">🏋️</div>
+          <img src="/logogym.jpeg" alt="E28 Logo" style={{ width: '40px', height: '40px', borderRadius: '50%', objectFit: 'cover' }} />
           <div className="gym-logo-text">E28<span> Ladies Gym</span></div>
         </div>
         <div className="gym-nav-links">
