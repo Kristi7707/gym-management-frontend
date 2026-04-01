@@ -28,11 +28,11 @@ function Login({ onLogin }) {
             marginBottom: '0.5rem'
           }}>🏋️</div>
           <div style={{
-            fontFamily: 'Bebas Neue, sans-serif',
-            fontSize: '2rem',
-            letterSpacing: '3px',
-            color: '#f0f0f0'
-          }}>GYM<span style={{ color: '#e8ff00' }}>PRO</span></div>
+  fontFamily: 'Bebas Neue, sans-serif',
+  fontSize: '2rem',
+  letterSpacing: '3px',
+  color: '#f0f0f0'
+}}>E28<span style={{ color: '#9b59b6' }}> Ladies Gym</span></div>
           <div style={{ color: '#666', fontSize: '0.85rem', marginTop: '0.5rem' }}>
             Admin Panel
           </div>

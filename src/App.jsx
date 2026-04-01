@@ -17,7 +17,7 @@ function App() {
       <nav className="gym-navbar">
         <div className="gym-logo">
           <div className="gym-logo-icon">🏋️</div>
-          <div className="gym-logo-text">GYM<span>PRO</span></div>
+          <div className="gym-logo-text">E28<span> Ladies Gym</span></div>
         </div>
         <div className="gym-nav-links">
           <NavLink to="/members">Members</NavLink>
