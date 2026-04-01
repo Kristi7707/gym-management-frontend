@@ -4,7 +4,9 @@ import axios from 'axios'
 const API_URL = 'https://gym-management-system-production-5dd2.up.railway.app'
 
 function Members() {
+  const [expiringMembers, setExpiringMembers] = useState([])
   const [members, setMembers] = useState([])
+  const [editMember, setEditMember] = useState(null)
   const [form, setForm] = useState({
     name: '',
     email: '',
@@ -15,7 +17,18 @@ function Members() {
 
   const fetchMembers = () => {
     axios.get(`${API_URL}/members`)
-      .then(response => setMembers(response.data))
+      .then(response => {
+        setMembers(response.data)
+        const today = new Date()
+        const in7Days = new Date()
+        in7Days.setDate(today.getDate() + 7)
+        const expiring = response.data.filter(member => {
+          if (!member.expiryDate) return false
+          const expiry = new Date(member.expiryDate)
+          return expiry <= in7Days
+        })
+        setExpiringMembers(expiring)
+      })
       .catch(error => console.log(error))
   }
 
@@ -45,11 +58,51 @@ function Members() {
     }
   }
 
+  const handleEdit = (member) => {
+    setEditMember(member)
+  }
+
+  const handleUpdate = (e) => {
+    e.preventDefault()
+    axios.put(`${API_URL}/members/${editMember.id}`, editMember)
+      .then(() => {
+        fetchMembers()
+        setEditMember(null)
+      })
+      .catch(error => console.log(error))
+  }
+
   return (
     <div>
       <div className="gym-page-header">
         <div className="gym-page-title">MEM<span>BERS</span></div>
       </div>
+
+      {expiringMembers.length > 0 && (
+        <div style={{
+          background: 'rgba(255, 61, 0, 0.15)',
+          border: '1px solid #ff3d00',
+          borderRadius: '12px',
+          padding: '1rem 1.5rem',
+          marginBottom: '1.5rem'
+        }}>
+          <div style={{
+            color: '#ff3d00',
+            fontWeight: '600',
+            fontSize: '0.8rem',
+            letterSpacing: '2px',
+            textTransform: 'uppercase',
+            marginBottom: '0.5rem'
+          }}>
+            ⚠️ Membership Expiring Soon
+          </div>
+          {expiringMembers.map(member => (
+            <div key={member.id} style={{ color: '#f0f0f0', fontSize: '0.9rem', padding: '2px 0' }}>
+              <strong>{member.name}</strong> — expires on {new Date(member.expiryDate).toLocaleDateString()}
+            </div>
+          ))}
+        </div>
+      )}
 
       <div className="gym-stats">
         <div className="gym-stat">
@@ -68,10 +121,33 @@ function Members() {
           <input className="gym-input" name="name" placeholder="Full Name" value={form.name} onChange={handleChange} />
           <input className="gym-input" name="email" placeholder="Email" value={form.email} onChange={handleChange} />
           <input className="gym-input" name="phone" placeholder="Phone" value={form.phone} onChange={handleChange} />
-          <input className="gym-input" name="membershipType" placeholder="Membership Type" value={form.membershipType} onChange={handleChange} />
+          <select className="gym-select" name="membershipType" value={form.membershipType} onChange={handleChange}>
+            <option value="">Select Membership Type</option>
+            <option value="monthly">Monthly</option>
+            <option value="3 months">3 Months</option>
+            <option value="yearly">Yearly</option>
+          </select>
           <button className="gym-btn" type="submit">Add Member</button>
         </form>
       </div>
+
+      {editMember && (
+        <div className="gym-card">
+          <div className="gym-card-title">Edit Member</div>
+          <form className="gym-form" onSubmit={handleUpdate}>
+            <input className="gym-input" placeholder="Full Name" value={editMember.name} onChange={e => setEditMember({...editMember, name: e.target.value})} />
+            <input className="gym-input" placeholder="Email" value={editMember.email} onChange={e => setEditMember({...editMember, email: e.target.value})} />
+            <input className="gym-input" placeholder="Phone" value={editMember.phone} onChange={e => setEditMember({...editMember, phone: e.target.value})} />
+            <select className="gym-select" value={editMember.membershipType} onChange={e => setEditMember({...editMember, membershipType: e.target.value})}>
+              <option value="monthly">Monthly</option>
+              <option value="3 months">3 Months</option>
+              <option value="yearly">Yearly</option>
+            </select>
+            <button className="gym-btn" type="submit">Save Changes</button>
+            <button className="gym-btn gym-btn-secondary" type="button" onClick={() => setEditMember(null)}>Cancel</button>
+          </form>
+        </div>
+      )}
 
       <div className="gym-table-wrap">
         <table className="gym-table">
@@ -82,6 +158,8 @@ function Members() {
               <th>Email</th>
               <th>Phone</th>
               <th>Membership</th>
+              <th>Start Date</th>
+              <th>Expiry Date</th>
               <th>Status</th>
               <th>Action</th>
             </tr>
@@ -94,12 +172,19 @@ function Members() {
                 <td>{member.email}</td>
                 <td>{member.phone}</td>
                 <td>{member.membershipType}</td>
+                <td>{member.startDate ? new Date(member.startDate).toLocaleDateString() : '—'}</td>
+                <td style={{ color: member.expiryDate && new Date(member.expiryDate) <= new Date(Date.now() + 7*24*60*60*1000) ? '#e74c3c' : '#f0f0f0' }}>
+                  {member.expiryDate ? new Date(member.expiryDate).toLocaleDateString() : '—'}
+                </td>
                 <td>
                   <span className={`gym-badge ${member.active ? 'gym-badge-active' : 'gym-badge-inactive'}`}>
                     {member.active ? 'Active' : 'Inactive'}
                   </span>
                 </td>
-                <td>
+                <td style={{ display: 'flex', gap: '6px' }}>
+                  <button className="gym-btn" onClick={() => handleEdit(member)}>
+                    Edit
+                  </button>
                   <button className="gym-btn gym-btn-secondary" onClick={() => handleDelete(member.id)}>
                     Delete
                   </button>

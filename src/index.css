@@ -4,7 +4,7 @@
   --bg: #0d0d0d;
   --surface: #161616;
   --surface2: #1f1f1f;
-  --accent: #e8ff00;
+  --accent: #9b59b6;
   --accent2: #ff3d00;
   --text: #f0f0f0;
   --muted: #666;
@@ -182,7 +182,7 @@ body {
 }
 
 .gym-btn:hover {
-  background: #d4e600;
+  background: #8e44ad;
   transform: translateY(-1px);
 }
 
