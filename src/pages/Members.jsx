@@ -12,6 +12,7 @@ function Members() {
     email: '',
     phone: '',
     membershipType: '',
+    startDate: '',
     active: true
   })
 
@@ -127,6 +128,13 @@ function Members() {
             <option value="3 months">3 Months</option>
             <option value="yearly">Yearly</option>
           </select>
+          <input 
+  className="gym-input" 
+  type="date" 
+  name="startDate" 
+  value={form.startDate} 
+  onChange={handleChange} 
+/>
           <button className="gym-btn" type="submit">Add Member</button>
         </form>
       </div>
@@ -143,6 +151,12 @@ function Members() {
               <option value="3 months">3 Months</option>
               <option value="yearly">Yearly</option>
             </select>
+            <input
+  className="gym-input"
+  type="date"
+  value={editMember.startDate || ''}
+  onChange={e => setEditMember({...editMember, startDate: e.target.value})}
+/>
             <button className="gym-btn" type="submit">Save Changes</button>
             <button className="gym-btn gym-btn-secondary" type="button" onClick={() => setEditMember(null)}>Cancel</button>
           </form>
