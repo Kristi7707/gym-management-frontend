@@ -195,7 +195,7 @@ function Members() {
                     {member.active ? 'Active' : 'Inactive'}
                   </span>
                 </td>
-                <td style={{ display: 'flex', gap: '6px' }}>
+                <td style={{ display: 'flex', gap: '6px', minWidth: '140px' }}>
                   <button className="gym-btn" onClick={() => handleEdit(member)}>
                     Edit
                   </button>
