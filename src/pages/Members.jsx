@@ -167,7 +167,6 @@ function Members() {
         <table className="gym-table">
           <thead>
             <tr>
-              <th>ID</th>
               <th>Name</th>
               <th>Email</th>
               <th>Phone</th>
@@ -181,7 +180,6 @@ function Members() {
           <tbody>
             {members.map(member => (
               <tr key={member.id}>
-                <td>{member.id}</td>
                 <td>{member.name}</td>
                 <td>{member.email}</td>
                 <td>{member.phone}</td>
