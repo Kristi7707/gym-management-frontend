@@ -1,16 +1,25 @@
 import { useState } from 'react'
+import axios from 'axios'
+
+const API_URL = 'https://gym-management-system-production-5dd2.up.railway.app'
 
 function Login({ onLogin }) {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
+  const [loading, setLoading] = useState(false)
 
   const handleLogin = () => {
-    if (username === 'Krist' && password === 'gym123') {
-      onLogin()
-    } else {
-      setError('Invalid username or password!')
-    }
+    setLoading(true)
+    setError('')
+    axios.post(`${API_URL}/auth/login`, { username, password })
+      .then(response => {
+        onLogin(response.data.token)
+      })
+      .catch(() => {
+        setError('Invalid username or password!')
+        setLoading(false)
+      })
   }
 
   return (
@@ -25,11 +34,11 @@ function Login({ onLogin }) {
         <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
           <img src="/logogym.jpeg" alt="E28 Logo" style={{ width: '80px', height: '80px', borderRadius: '50%', objectFit: 'cover', marginBottom: '0.5rem' }} />
           <div style={{
-  fontFamily: 'Bebas Neue, sans-serif',
-  fontSize: '2rem',
-  letterSpacing: '3px',
-  color: '#f0f0f0'
-}}>E28<span style={{ color: '#9b59b6' }}> Ladies Gym</span></div>
+            fontFamily: 'Bebas Neue, sans-serif',
+            fontSize: '2rem',
+            letterSpacing: '3px',
+            color: '#f0f0f0'
+          }}>E28<span style={{ color: '#9b59b6' }}> Ladies Gym</span></div>
           <div style={{ color: '#666', fontSize: '0.85rem', marginTop: '0.5rem' }}>
             Admin Panel
           </div>
@@ -57,8 +66,8 @@ function Login({ onLogin }) {
               {error}
             </div>
           )}
-          <button className="gym-btn" onClick={handleLogin} style={{ width: '100%' }}>
-            Login
+          <button className="gym-btn" onClick={handleLogin} disabled={loading} style={{ width: '100%' }}>
+            {loading ? 'Signing in...' : 'Login'}
           </button>
         </div>
       </div>

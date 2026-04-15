@@ -3,7 +3,7 @@ import axios from 'axios'
 
 const API_URL = 'https://gym-management-system-production-5dd2.up.railway.app'
 
-function Trainers() {
+function Trainers({ token }) {
   const [trainers, setTrainers] = useState([])
   const [form, setForm] = useState({
     name: '',
@@ -12,8 +12,10 @@ function Trainers() {
     active: true
   })
 
+  const headers = { Authorization: `Bearer ${token}` }
+
   const fetchTrainers = () => {
-    axios.get(`${API_URL}/trainers`)
+    axios.get(`${API_URL}/trainers`, { headers })
       .then(response => setTrainers(response.data))
       .catch(error => console.log(error))
   }
@@ -28,7 +30,7 @@ function Trainers() {
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    axios.post(`${API_URL}/trainers`, form)
+    axios.post(`${API_URL}/trainers`, form, { headers })
       .then(() => {
         fetchTrainers()
         setForm({ name: '', specialization: '', phone: '', active: true })
@@ -38,7 +40,7 @@ function Trainers() {
 
   const handleDelete = (id) => {
     if (window.confirm('Are you sure you want to delete this trainer?')) {
-      axios.delete(`${API_URL}/trainers/${id}`)
+      axios.delete(`${API_URL}/trainers/${id}`, { headers })
         .then(() => fetchTrainers())
         .catch(error => console.log(error))
     }
@@ -75,7 +77,6 @@ function Trainers() {
         <table className="gym-table">
           <thead>
             <tr>
-              <th>ID</th>
               <th>Name</th>
               <th>Specialization</th>
               <th>Phone</th>
@@ -86,7 +87,6 @@ function Trainers() {
           <tbody>
             {trainers.map(trainer => (
               <tr key={trainer.id}>
-                <td>{trainer.id}</td>
                 <td>{trainer.name}</td>
                 <td>{trainer.specialization}</td>
                 <td>{trainer.phone}</td>

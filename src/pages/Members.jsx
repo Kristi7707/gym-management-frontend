@@ -3,7 +3,7 @@ import axios from 'axios'
 
 const API_URL = 'https://gym-management-system-production-5dd2.up.railway.app'
 
-function Members() {
+function Members({ token }) {
   const [expiringMembers, setExpiringMembers] = useState([])
   const [members, setMembers] = useState([])
   const [editMember, setEditMember] = useState(null)
@@ -16,8 +16,10 @@ function Members() {
     active: true
   })
 
+  const headers = { Authorization: `Bearer ${token}` }
+
   const fetchMembers = () => {
-    axios.get(`${API_URL}/members`)
+    axios.get(`${API_URL}/members`, { headers })
       .then(response => {
         setMembers(response.data)
         const today = new Date()
@@ -43,17 +45,17 @@ function Members() {
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    axios.post(`${API_URL}/members`, form)
+    axios.post(`${API_URL}/members`, form, { headers })
       .then(() => {
         fetchMembers()
-        setForm({ name: '', email: '', phone: '', membershipType: '', active: true })
+        setForm({ name: '', email: '', phone: '', membershipType: '', startDate: '', active: true })
       })
       .catch(error => console.log(error))
   }
 
   const handleDelete = (id) => {
     if (window.confirm('Are you sure you want to delete this member?')) {
-      axios.delete(`${API_URL}/members/${id}`)
+      axios.delete(`${API_URL}/members/${id}`, { headers })
         .then(() => fetchMembers())
         .catch(error => console.log(error))
     }
@@ -65,7 +67,7 @@ function Members() {
 
   const handleUpdate = (e) => {
     e.preventDefault()
-    axios.put(`${API_URL}/members/${editMember.id}`, editMember)
+    axios.put(`${API_URL}/members/${editMember.id}`, editMember, { headers })
       .then(() => {
         fetchMembers()
         setEditMember(null)
@@ -128,13 +130,13 @@ function Members() {
             <option value="3 months">3 Months</option>
             <option value="yearly">Yearly</option>
           </select>
-          <input 
-  className="gym-input" 
-  type="date" 
-  name="startDate" 
-  value={form.startDate} 
-  onChange={handleChange} 
-/>
+          <input
+            className="gym-input"
+            type="date"
+            name="startDate"
+            value={form.startDate}
+            onChange={handleChange}
+          />
           <button className="gym-btn" type="submit">Add Member</button>
         </form>
       </div>
@@ -152,11 +154,11 @@ function Members() {
               <option value="yearly">Yearly</option>
             </select>
             <input
-  className="gym-input"
-  type="date"
-  value={editMember.startDate || ''}
-  onChange={e => setEditMember({...editMember, startDate: e.target.value})}
-/>
+              className="gym-input"
+              type="date"
+              value={editMember.startDate || ''}
+              onChange={e => setEditMember({...editMember, startDate: e.target.value})}
+            />
             <button className="gym-btn" type="submit">Save Changes</button>
             <button className="gym-btn gym-btn-secondary" type="button" onClick={() => setEditMember(null)}>Cancel</button>
           </form>

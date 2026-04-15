@@ -6,10 +6,10 @@ import Attendance from './pages/Attendance'
 import Login from './pages/Login'
 
 function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false)
+  const [token, setToken] = useState(null)
 
-  if (!isLoggedIn) {
-    return <Login onLogin={() => setIsLoggedIn(true)} />
+  if (!token) {
+    return <Login onLogin={(t) => setToken(t)} />
   }
 
   return (
@@ -26,7 +26,7 @@ function App() {
           <button
             className="gym-btn gym-btn-secondary"
             style={{ padding: '6px 14px', fontSize: '0.8rem' }}
-            onClick={() => setIsLoggedIn(false)}
+            onClick={() => setToken(null)}
           >
             Logout
           </button>
@@ -36,9 +36,9 @@ function App() {
       <div className="gym-page">
         <Routes>
           <Route path="/" element={<Navigate to="/members" />} />
-          <Route path="/members" element={<Members />} />
-          <Route path="/trainers" element={<Trainers />} />
-          <Route path="/attendance" element={<Attendance />} />
+          <Route path="/members" element={<Members token={token} />} />
+          <Route path="/trainers" element={<Trainers token={token} />} />
+          <Route path="/attendance" element={<Attendance token={token} />} />
         </Routes>
       </div>
     </BrowserRouter>

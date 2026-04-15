@@ -3,21 +3,23 @@ import axios from 'axios'
 
 const API_URL = 'https://gym-management-system-production-5dd2.up.railway.app'
 
-function Attendance() {
+function Attendance({ token }) {
   const [members, setMembers] = useState([])
   const [memberId, setMemberId] = useState('')
   const [attendanceId, setAttendanceId] = useState('')
   const [records, setRecords] = useState([])
   const [searchId, setSearchId] = useState('')
 
+  const headers = { Authorization: `Bearer ${token}` }
+
   useEffect(() => {
-    axios.get(`${API_URL}/members`)
+    axios.get(`${API_URL}/members`, { headers })
       .then(response => setMembers(response.data))
       .catch(error => console.log(error))
   }, [])
 
   const handleCheckIn = () => {
-    axios.post(`${API_URL}/attendance/checkin/${memberId}`)
+    axios.post(`${API_URL}/attendance/checkin/${memberId}`, {}, { headers })
       .then(() => {
         alert('Checked in successfully!')
         setMemberId('')
@@ -26,7 +28,7 @@ function Attendance() {
   }
 
   const handleCheckOut = () => {
-    axios.put(`${API_URL}/attendance/checkout/${attendanceId}`)
+    axios.put(`${API_URL}/attendance/checkout/${attendanceId}`, {}, { headers })
       .then(() => {
         alert('Checked out successfully!')
         setAttendanceId('')
@@ -35,7 +37,7 @@ function Attendance() {
   }
 
   const handleSearch = () => {
-    axios.get(`${API_URL}/attendance/member/${searchId}`)
+    axios.get(`${API_URL}/attendance/member/${searchId}`, { headers })
       .then(response => setRecords(response.data))
       .catch(error => console.log(error))
   }
@@ -101,7 +103,6 @@ function Attendance() {
           <table className="gym-table">
             <thead>
               <tr>
-                <th>ID</th>
                 <th>Member</th>
                 <th>Check In</th>
                 <th>Check Out</th>
@@ -111,7 +112,6 @@ function Attendance() {
             <tbody>
               {records.map(record => (
                 <tr key={record.id}>
-                  <td>{record.id}</td>
                   <td>{record.member.name}</td>
                   <td>{new Date(record.checkInTime).toLocaleString()}</td>
                   <td>{record.checkOutTime ? new Date(record.checkOutTime).toLocaleString() : '—'}</td>
